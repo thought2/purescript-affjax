@@ -14,12 +14,14 @@ import Web.File.Blob (Blob)
 
 -- | Used to represent how a HTTP response body should be interpreted.
 data ResponseFormat a
-  = ArrayBuffer (forall f. f ArrayBuffer -> f a)
-  | Blob (forall f. f Blob -> f a)
-  | Document (forall f. f Document -> f a)
-  | Json (forall f. f Json -> f a)
-  | String (forall f. f String -> f a)
-  | Ignore (forall f. f Unit -> f a)
+  = ArrayBuffer (forall f. Functor f => f ArrayBuffer -> f a)
+  | Blob (forall f. Functor f => f Blob -> f a)
+  | Document (forall f. Functor f => f Document -> f a)
+  | Json (forall f. Functor f => f Json -> f a)
+  | String (forall f. Functor f => f String -> f a)
+  | Ignore (forall f. Functor f => f Unit -> f a)
+
+derive instance functorResponseFormat :: Functor ResponseFormat
 
 arrayBuffer :: ResponseFormat ArrayBuffer
 arrayBuffer = ArrayBuffer identity
